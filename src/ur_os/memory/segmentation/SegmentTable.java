@@ -83,38 +83,38 @@ public class SegmentTable {
     }
     
     public MemoryAddress getSegmentMemoryAddressFromLocalAddress(int locAdd, boolean store){
-    int segment = -1;
-    int offset = -1;
+        int segment = -1;
+        int offset = -1;
 
-    // Go through each segment entry to find which one contains the local address
-    int accumulatedBase = 0;
-    for (int i = 0; i < segmentTable.size(); i++) {
-        SegmentTableEntry seg = segmentTable.get(i);
-        int segLimit = seg.getLimit();
+        // Go through each segment entry to find which one contains the local address
+        int accumulatedBase = 0;
+        for (int i = 0; i < segmentTable.size(); i++) {
+            SegmentTableEntry seg = segmentTable.get(i);
+            int segLimit = seg.getLimit();
 
-        if (locAdd >= accumulatedBase && locAdd < accumulatedBase + segLimit) {
-            segment = i;
-            offset = locAdd - accumulatedBase;
-            break;
+            if (locAdd >= accumulatedBase && locAdd < accumulatedBase + segLimit) {
+                segment = i;
+                offset = locAdd - accumulatedBase;
+                break;
+            }
+
+            accumulatedBase += segLimit;
         }
 
-        accumulatedBase += segLimit;
-    }
+        
+        if (segment == -1) {
+            System.out.println("Error: Invalid local address " + locAdd);
+            return new MemoryAddress(-1, -1);
+        }
 
-    // If address does not fall into any segment, it’s invalid
-    if (segment == -1) {
-        System.out.println("Error: Invalid local address " + locAdd);
-        return new MemoryAddress(-1, -1);
-    }
+        // If we're writing data, mark the segment as dirty (modified)
+        if (store) {
+            this.segmentTable.get(segment).setDirty();
+        }
 
-    // If we're writing data, mark the segment as dirty (modified)
-    if (store) {
-        this.segmentTable.get(segment).setDirty();
+        System.out.println("Accessing Segment " + segment + " and offset " + offset);
+        return new MemoryAddress(segment, offset);
     }
-
-    System.out.println("Accessing Segment " + segment + " and offset " + offset);
-    return new MemoryAddress(segment, offset);
-}
 
     
     public MemoryAddress getPhysicalMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
