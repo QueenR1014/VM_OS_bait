@@ -142,7 +142,7 @@
         
         public MemoryAddress getVFrameMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
             if(m == null) return new MemoryAddress(-1,-1);
-            
+            int page = m.getDivision() / OS.PAGE_SIZE;
             int offset = m.getOffset();
             
             if(page < 0){
