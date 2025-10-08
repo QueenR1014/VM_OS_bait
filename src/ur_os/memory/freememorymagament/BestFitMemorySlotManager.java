@@ -14,6 +14,7 @@ public class BestFitMemorySlotManager extends FreeMemorySlotManager {
     @Override
     public MemorySlot getSlot(int size) {
         if (list.isEmpty()) {
+            System.out.println("Error: No free memory available.");
             return null; // no free memory available
         }
 
@@ -30,6 +31,7 @@ public class BestFitMemorySlotManager extends FreeMemorySlotManager {
 
         if (bestSlot == null) {
             // No suitable slot found
+            System.out.println("Error: No suitable slot found.");
             return null;
         }
 

@@ -378,10 +378,14 @@ public class SystemOS implements Runnable{
         System.out.println("Average Waiting Time: "+this.calcAvgWaitingTime());
         System.out.println("Average Context Switches: "+this.calcAvgContextSwitches());
         System.out.println("Average Response Time: "+this.calcAvgResponseTime());
+        System.out.println("");
         
+        System.out.println("******Show Processes******");
         showProcesses();
         memory.showNotNullBytes();
-        
+        System.out.println("");
+
+        System.out.println("******Final Free Memory******");
         showFreeMemory();
     }
     
