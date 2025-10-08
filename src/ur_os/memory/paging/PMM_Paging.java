@@ -123,14 +123,16 @@
         }
         
         public MemoryAddress getFrameMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
-            int page = m.getDivision();
+            if(m == null) return new MemoryAddress(-1,-1);
+             
+            int page = m.getDivision() / OS.PAGE_SIZE;
             int offset = m.getOffset();
 
             //Check page validity
             if(!pt.isPageValid(page)) return new MemoryAddress(-1,-1);
 
             int frame = pt.getFrameIdFromPage(page);
-            return new MemoryAddress(frame, offset);
+            return new MemoryAddress(frame * OS.PAGE_SIZE, offset);
         }
         
         
@@ -139,9 +141,8 @@
         }
         
         public MemoryAddress getVFrameMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
-            
             if(m == null) return new MemoryAddress(-1,-1);
-            int page = m.getDivision() / OS.PAGE_SIZE;
+            
             int offset = m.getOffset();
             
             if(page < 0){
@@ -156,8 +157,8 @@
                 return new MemoryAddress(-1,-1); 
             }
             
-            int vdivision = vframe * OS.PAGE_SIZE;
-            return new MemoryAddress(vdivision, offset);
+            
+            return new MemoryAddress(vframe * OS.PAGE_SIZE, offset);
         }
         
     
