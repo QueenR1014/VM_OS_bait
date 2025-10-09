@@ -101,6 +101,10 @@ public class OS {
                 fmm = new WorstFitMemorySlotManager(SystemOS.MEMORY_SIZE);
                 fvmm = new WorstFitMemorySlotManager(SystemOS.SWAP_MEMORY_SIZE);
                 break;
+            case NEXT_FIT:
+                fmm = new NextFitMemorySlotManager(SystemOS.MEMORY_SIZE);
+                fvmm = new NextFitMemorySlotManager(SystemOS.SWAP_MEMORY_SIZE);
+                break;
             }
         }
          
@@ -407,4 +411,5 @@ public class OS {
     }
     
 }
+
 
