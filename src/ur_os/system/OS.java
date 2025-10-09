@@ -16,6 +16,7 @@ import ur_os.process.ProcessState;
 import java.util.Random;
 import ur_os.memory.freememorymagament.BestFitMemorySlotManager;
 import ur_os.memory.freememorymagament.FirstFitMemorySlotManager;
+import ur_os.memory.freememorymagament.NextFitMemorySlotManager;
 import ur_os.memory.freememorymagament.FreeMemoryManager;
 import ur_os.memory.freememorymagament.MemorySlot;
 import ur_os.memory.freememorymagament.FreeMemorySlotManager;
@@ -406,3 +407,4 @@ public class OS {
     }
     
 }
+
