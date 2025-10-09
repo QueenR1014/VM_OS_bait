@@ -114,63 +114,82 @@ public class SystemOS implements Runnable{
         clock = 0;
     }
     
-    public void initSimulationQueueSimpler(){
-        
-        int tempSize;
-        Process p = new Process(0,0);
-        tempSize = r.nextInt(MAX_PROC_SIZE-1)+1;
-        p.setSize(tempSize);
-        Instruction temp;  
-        p.addCPUInstructions(3);
-        temp = new MemoryInstruction(MemoryOperationType.LOAD, r.nextInt(tempSize), (byte)-1, 4); //Load from logical address 5, 4 clock cycles    
-        p.addInstruction(temp);
-        p.addCPUInstructions(3);
-        temp = new EndInstruction();
-        p.addInstruction(temp);
-        processes.add(p);
-        
-        
-        //Process 1
-        p = new Process(1,2);
-        tempSize = r.nextInt(MAX_PROC_SIZE-1)+1;
-        p.setSize(tempSize);
-        p.addCPUInstructions(3);
-        //temp = new IOInstruction(5); 
-        temp = new MemoryInstruction(MemoryOperationType.STORE, r.nextInt(tempSize), (byte)38, 3); //Store in logical address 10, valir 38, 3 clock cycles
-        p.addInstruction(temp);
-        p.addCPUInstructions(3);
-        temp = new EndInstruction();
-        p.addInstruction(temp);
-        processes.add(p);
-        
-        
-        //Process 2
-        p = new Process(2,6);
-        tempSize = r.nextInt(MAX_PROC_SIZE-1)+1;
-        p.setSize(tempSize);
-        p.addCPUInstructions(7);
-        //temp = new IOInstruction(3);    
-        temp = new MemoryInstruction(MemoryOperationType.LOAD, r.nextInt(tempSize), (byte)-1, 4); //Load from logical address 62, 4 clock cycles    
-        p.addInstruction(temp);
-        p.addCPUInstructions(5);
-        temp = new EndInstruction();
-        p.addInstruction(temp);
-        processes.add(p);
-        
-        //Process 3
-        p = new Process(3,8);
-        tempSize = r.nextInt(MAX_PROC_SIZE-1)+1;
-        p.setSize(tempSize);
-        p.addCPUInstructions(4);
-        //temp = new IOInstruction(3);    
-        temp = new MemoryInstruction(MemoryOperationType.STORE, r.nextInt(tempSize), (byte)42, 4); //Store in logical address 10, valir 38, 3 clock cycles
-        p.addInstruction(temp);
-        p.addCPUInstructions(7);
-        temp = new EndInstruction();
-        p.addInstruction(temp);
-        processes.add(p);
-        
-        clock = 0;
+    public void initSimulationQueueSimpler() {
+
+    processes.clear(); // Limpia la lista si ya hay procesos cargados
+
+    Process p;
+    Instruction temp;
+
+    // === Proceso 0 ===
+    p = new Process(0, 0); // ID=0, T-ini=0
+    p.setSize(300);        // tamaño en memoria
+    p.addCPUInstructions(6);  // CPU inicial (mitad del tiempo total 12)
+    temp = new MemoryInstruction(
+        MemoryOperationType.LOAD,
+        100,                // dirección lógica de la tabla
+        (byte) -1,          // valor no usado para LOAD
+        4                   // duración (4 ciclos)
+    );
+    p.addInstruction(temp);
+    p.addCPUInstructions(6);  // CPU final (mitad restante)
+    temp = new EndInstruction();
+    p.addInstruction(temp);
+    processes.add(p);
+
+
+    // === Proceso 1 ===
+    p = new Process(1, 7); // ID=1, T-ini=7
+    p.setSize(450);
+    p.addCPUInstructions(14); // CPU inicial (mitad de 28)
+    temp = new MemoryInstruction(
+        MemoryOperationType.STORE,
+        250,                // dirección lógica
+        (byte) 42,          // valor a almacenar
+        5                   // duración de la operación
+    );
+    p.addInstruction(temp);
+    p.addCPUInstructions(14); // CPU final
+    temp = new EndInstruction();
+    p.addInstruction(temp);
+    processes.add(p);
+
+
+    // === Proceso 2 ===
+    p = new Process(2, 12); // ID=2, T-ini=12
+    p.setSize(250);
+    p.addCPUInstructions(6); // CPU inicial (mitad de 13)
+    temp = new MemoryInstruction(
+        MemoryOperationType.LOAD,
+        150,
+        (byte) -1,
+        4
+    );
+    p.addInstruction(temp);
+    p.addCPUInstructions(7); // CPU final
+    temp = new EndInstruction();
+    p.addInstruction(temp);
+    processes.add(p);
+
+
+    // === Proceso 3 ===
+    p = new Process(3, 18); // ID=3, T-ini=18
+    p.setSize(150);
+    p.addCPUInstructions(6); // CPU inicial (mitad de 12)
+    temp = new MemoryInstruction(
+        MemoryOperationType.STORE,
+        10,
+        (byte) 33,           // valor arbitrario
+        4
+    );
+    p.addInstruction(temp);
+    p.addCPUInstructions(6); // CPU final
+    temp = new EndInstruction();
+    p.addInstruction(temp);
+    processes.add(p);
+
+
+    clock = 0;
     }
     
     public void initSimulationQueueSimpler3(){
@@ -475,3 +494,4 @@ public class SystemOS implements Runnable{
     
     
 }
+
