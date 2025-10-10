@@ -117,12 +117,49 @@ public class SegmentTable {
     }
 
     
-    public MemoryAddress getPhysicalMemoryAddressFromLogicalMemoryAddress(MemoryAddress m){
-        
-        //Include your code here
-        
-        return new MemoryAddress(-1, -1);
+    public MemoryAddress getPhysicalMemoryAddressFromLogicalMemoryAddress(MemoryAddress m) {
+        if (m == null) {
+            System.out.println("Error: Null logical address.");
+            return new MemoryAddress(-1, -1);
+        }
+
+        int logicalBase = m.getDivision();  // Logical base (byte address in program)
+        int offset = m.getOffset();
+
+        int accumulatedBase = 0;
+        SegmentTableEntry seg = null;
+
+        // Find which segment contains the logical base
+        for (SegmentTableEntry entry : segmentTable) {
+            int limit = entry.getLimit();
+            if (logicalBase >= accumulatedBase && logicalBase < accumulatedBase + limit) {
+                seg = entry;
+                break;
+            }
+            accumulatedBase += limit;
+        }
+
+        if (seg == null) {
+            System.out.println("Error: Logical address " + logicalBase + " is not within any segment.");
+            return new MemoryAddress(-1, -1);
+        }
+
+        // Calculate offset inside the segment
+        int offsetWithinSegment = logicalBase - accumulatedBase + offset;
+
+        // Check that final offset does not exceed segment limit
+        if (offsetWithinSegment >= seg.getLimit()) {
+            System.out.println("Error: Offset exceeds segment limit.");
+            return new MemoryAddress(-1, -1);
+        }
+
+        // Translate to physical address: base + offset
+        int physicalDivision = seg.getBase();
+        int physicalOffset = offsetWithinSegment;
+
+        return new MemoryAddress(physicalDivision, physicalOffset);
     }
+
     
     public SegmentTableEntry getSegment(int i){
         return segmentTable.get(i);
