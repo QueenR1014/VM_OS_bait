@@ -82,39 +82,40 @@ public class SegmentTable {
         return segmentTable;
     }
     
-    public MemoryAddress getSegmentMemoryAddressFromLocalAddress(int locAdd, boolean store){
+    public MemoryAddress getSegmentMemoryAddressFromLocalAddress(int locAddr, boolean store) {
         int segment = -1;
         int offset = -1;
-
-        // Go through each segment entry to find which one contains the local address
         int accumulatedBase = 0;
+
+        // Find which segment contains the given logical address
         for (int i = 0; i < segmentTable.size(); i++) {
             SegmentTableEntry seg = segmentTable.get(i);
             int segLimit = seg.getLimit();
 
-            if (locAdd >= accumulatedBase && locAdd < accumulatedBase + segLimit) {
+            if (locAddr >= accumulatedBase && locAddr < accumulatedBase + segLimit) {
                 segment = i;
-                offset = locAdd - accumulatedBase;
+                offset = locAddr - accumulatedBase;
                 break;
             }
 
             accumulatedBase += segLimit;
         }
 
-        
+        // Check if address is valid
         if (segment == -1) {
-            System.out.println("Error: Invalid local address " + locAdd);
+            System.out.println("Error: Invalid logical address " + locAddr);
             return new MemoryAddress(-1, -1);
         }
 
-        // If we're writing data, mark the segment as dirty (modified)
+        // If we're writing, mark segment as dirty
         if (store) {
-            this.segmentTable.get(segment).setDirty();
+            segmentTable.get(segment).setDirty();
         }
 
-        System.out.println("Accessing Segment " + segment + " and offset " + offset);
+        System.out.println("Accessing Segment " + segment + " with offset " + offset);
         return new MemoryAddress(segment, offset);
     }
+
 
     
     public MemoryAddress getPhysicalMemoryAddressFromLogicalMemoryAddress(MemoryAddress m) {
