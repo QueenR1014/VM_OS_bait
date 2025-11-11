@@ -85,6 +85,41 @@ public class SystemOS implements Runnable{
         return ps;
     }
 
+
+    // Virtual Memory Simulation Process Creation
+
+    public void initVMSim(){
+        // Create a single process with multiple memory instructions
+
+        Process p = new Process(0,0);
+        p.setSize(300);
+
+        p.addCPUInstructions(5);
+
+
+        Random random = new Random(1234);
+        for(int i = 0; i < 10; i++){
+            // Random creation of memory instruction components
+            MemoryOperationType mo = random.nextBoolean() ? 
+                MemoryOperationType.STORE : MemoryOperationType.LOAD;
+
+            int logicalAddress = random.nextInt(800);
+            byte content = (byte) random.nextInt(256);
+            int duration = random.nextInt(5);
+
+
+            MemoryInstruction temp = new MemoryInstruction(mo, logicalAddress, content, duration);
+            p.addInstruction(temp);
+
+        }
+
+
+        //End Process Instruction
+        p.addInstruction(new EndInstruction());
+
+    }
+
+
     public void initSimulationQueue(){
         double tp;
         Process p;
