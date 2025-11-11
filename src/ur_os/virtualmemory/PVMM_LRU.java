@@ -42,8 +42,10 @@ public class PVMM_LRU extends ProcessVirtualMemoryManager{
             size--;
         }
         
+        int victim = recent.getLast();
+        System.out.println("Selected victim: " + victim);
         //return the least recently used page
-        return recent.getLast();
+        return victim;
     }
     
 }

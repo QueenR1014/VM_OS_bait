@@ -28,7 +28,7 @@ public class SystemOS implements Runnable{
     
     SimulationType simType;
     private static int clock = 0;
-    private static final int MAX_SIM_CYCLES = 1000;
+    private static final int MAX_SIM_CYCLES = 100;
     private static final int MAX_SIM_PROC_CREATION_TIME = 50;
     private static final double PROB_PROC_CREATION = 0.1;
     public static final int MAX_PROC_SIZE = 1000;
@@ -62,8 +62,11 @@ public class SystemOS implements Runnable{
         processes = new ArrayList();
         //initSimulationQueue();
         //initSimulationQueueSimple();
-        initSimulationQueueSimpler();
+        //initSimulationQueueSimpler();
         
+        // Use of VM Simulation: 
+        initVMSim();
+
 
         showProcesses();
         this.simType = simType;
@@ -92,7 +95,7 @@ public class SystemOS implements Runnable{
         // Create a single process with multiple memory instructions
 
         Process p = new Process(0,0);
-        p.setSize(300);
+        p.setSize(20);
 
         p.addCPUInstructions(5);
 
@@ -104,7 +107,7 @@ public class SystemOS implements Runnable{
                 MemoryOperationType.STORE : MemoryOperationType.LOAD;
 
             int logicalAddress = random.nextInt(800);
-            byte content = (byte) random.nextInt(256);
+            byte content = (byte) random.nextInt(50);
             int duration = random.nextInt(5);
 
 
@@ -117,6 +120,7 @@ public class SystemOS implements Runnable{
         //End Process Instruction
         p.addInstruction(new EndInstruction());
 
+        processes.add(p);
     }
 
 
