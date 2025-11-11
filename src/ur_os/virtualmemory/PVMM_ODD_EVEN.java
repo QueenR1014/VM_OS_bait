@@ -25,27 +25,27 @@ public class PVMM_ODD_EVEN extends ProcessVirtualMemoryManager {
         if (loaded <= 0 || memoryAccesses == null || memoryAccesses.isEmpty())
             return -1;
 
-        // 1. Recolectar las páginas actualmente cargadas
+        // Trace currently loaded pages
         LinkedList<Integer> frames = new LinkedList<>();
         HashSet<Integer> seen = new HashSet<>();
 
-        // Se recorren los accesos desde el más reciente hacia atrás
+        // Go thruogh all accessess from most recent 
         for (int i = memoryAccesses.size() - 1; i >= 0 && frames.size() < loaded; i--) {
             int page = memoryAccesses.get(i);
             if (!seen.contains(page)) {
-                frames.addFirst(page); // la más antigua queda al inicio
+                frames.addFirst(page); // Oldest stays at the beggining
                 seen.add(page);
             }
         }
 
-        // 2. Elegir víctima según la paridad de los accesos
+        // Choose victim according to parity
         int totalAccesses = memoryAccesses.size();
 
         if (totalAccesses % 2 == 0) {
-            // Si el número de accesos es PAR -> eliminar la más antigua
+            // If total accesses is even -> erase the oldest
             return frames.getFirst();
         } else {
-            // Si el número de accesos es IMPAR -> eliminar la más reciente
+            // If total accesses is odd -> erase the most recent
             return frames.getLast();
         }
     }
