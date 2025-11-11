@@ -34,7 +34,10 @@ import static ur_os.system.SystemOS.MAX_PROC_SIZE;
 import ur_os.virtualmemory.*;
 
 import static ur_os.virtualmemory.ProcessVirtualMemoryManagerType.FIFO;
+import static ur_os.virtualmemory.ProcessVirtualMemoryManagerType.LFU;
 import static ur_os.virtualmemory.ProcessVirtualMemoryManagerType.LRU;
+import static ur_os.virtualmemory.ProcessVirtualMemoryManagerType.MFU;
+import static ur_os.virtualmemory.ProcessVirtualMemoryManagerType.ODD_EVEN;
 
 
 /**
@@ -55,12 +58,12 @@ public class OS {
     boolean lazySwap;
     
     public static final int MAX_PROCESS_PRIORITY = 10; //Page size in bytes
-    public static final int PAGE_SIZE = 64; //Page size in bytes
-    public static final MemoryManagerType SMM = MemoryManagerType.SEGMENTATION;
+    public static final int PAGE_SIZE = 1024; //Page size in bytes
+    public static final MemoryManagerType SMM = MemoryManagerType.CONTIGUOUS;
     public static final FreeMemorySlotManagerType MSM = FreeMemorySlotManagerType.WORST_FIT;
     
     public static final ProcessVirtualMemoryManagerType PVMM = ProcessVirtualMemoryManagerType.FIFO;
-    public static final int FRAMES_PER_PROCESS = 3; //Maximum number of frames assigned to a process, if virtual memory is on
+    public static final int FRAMES_PER_PROCESS = 5; //Maximum number of frames assigned to a process, if virtual memory is on
     public static final boolean VIRTUAL_MEMORY_MODE_ON = true; //Maximum number of frames assigned to a process, if virtual memory is on
     
     
@@ -338,6 +341,10 @@ public class OS {
                 p.getPMM().setPVMM(new PVMM_MFU());
                 break;
 
+            case ODD_EVEN:
+                p.getPMM().setPVMM(new PVMM_ODD_EVEN());
+                break;
+
         }
         
         
@@ -411,5 +418,6 @@ public class OS {
     }
     
 }
+
 
 
