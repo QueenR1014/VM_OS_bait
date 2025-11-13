@@ -137,7 +137,7 @@ public class SystemOS implements Runnable{
         p = new Process(1, 0);
         p.setSize(512); // 8 pages long process size
 
-
+        p.addCPUInstructions(1);
         //Load three pages
         p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P0_ADDR, (byte) 4));
         p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P1_ADDR, (byte) 4));

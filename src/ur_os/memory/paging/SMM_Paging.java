@@ -37,7 +37,7 @@ public class SMM_Paging extends SystemMemoryManager{
             
             
             //Only valid for Virtual Memory
-            if(pa == null){
+            if(pa.getAddress() < 0){
                 //There was a page fault, so the page needs to be brought to memory from swap
                 
                 int pageVictim = pmmp.getVictim(); //Find a page that needs to leave memory if there is no space
@@ -45,17 +45,21 @@ public class SMM_Paging extends SystemMemoryManager{
                 
                 int frameVictim;
                 
-                if(pageVictim == -1){ //If no victim was found because there are still frames available
-                    frameVictim = getOS().getFreeFrame(); //Obtain a new free frame to store the page from swap
+                if (pageVictim == -1) {
+                    // free frame available -> get a frame id
+                    frameVictim = getOS().getFreeFrame(); // frame id
                     frameVictimInSwap = -1;
-                }else{//If there are no free frames, then a pageVictim was selected
-                    frameVictim = pmmp.getFrameMemoryAddressFromLogicalMemoryAddress(pageVictim); //Find the frame number in memory of the victim page
-                    frameVictimInSwap = pmmp.getVFrameMemoryAddressFromLogicalMemoryAddress(pageVictim); //Find the frame number in Swap memory of the victim page
+                } else {
+                    // use PMM helpers to get frame IDs (not physical addresses)
+                    frameVictim = pmmp.getFrameIdFromPage(pageVictim);         // frame id in memory
+                    frameVictimInSwap = pmmp.getVFrameIdFromPage(pageVictim);  // frame id in swap
                 }
-                
-                int pageToLoad = la.getDivision(); //Get the pageID of the desired page
-                int frameToLoadInSwap= pmmp.getVFrameMemoryAddressFromLogicalMemoryAddress(pageToLoad); //Find the frame number in Swap memory of the desired page
-                
+
+                // page to load is the page id
+                int pageToLoad = la.getDivision();
+                // find the frame id in swap which contains the page we want
+                int frameToLoadInSwap = pmmp.getVFrameIdFromPage(pageToLoad);
+
                 MemoryPageExchange mpe = new MemoryPageExchange(pageVictim, frameVictimInSwap, frameVictim, pageToLoad, frameToLoadInSwap);
                 
                 if(pageVictim != -1){ //If there was a page identified to leave memory, then it may have to be sent to swap memory
@@ -72,7 +76,7 @@ public class SMM_Paging extends SystemMemoryManager{
                 return getPhysicalAddress(logicalAddress, pmm, store); //Try again!
             }else{
                 if(store){
-                    pmmp.setPageDirty(pa.getDivision(),true); //Set the accessed page for storage as dirty
+                    pmmp.setPageDirty(la.getDivision(),true);
                 }
                 return pa.getAddress();
             }

@@ -52,6 +52,8 @@ public class Process implements Comparable{
     }
     
     public Process(boolean autoProc, boolean autoMem, int pid, int time_init, int priority, ProcessMemoryManager pmm) {
+        
+        
         this.pid = pid;
         this.time_init = time_init;
         time_finished = -1;
@@ -80,7 +82,12 @@ public class Process implements Comparable{
         state = ProcessState.NEW;
         currentScheduler = 0;
         
-        
+        // ✅ DEBUGGING PRINT
+        System.out.println("=== Process Created ===");
+        System.out.println("PID: " + pid + " (created at time " + time_init + ")");
+        System.out.println("Instruction list:");
+        pil.getInstructionList().forEach(System.out::println);
+        System.out.println("========================\n");
     }
     
     public Process(Process p) {
