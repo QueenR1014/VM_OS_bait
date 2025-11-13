@@ -194,7 +194,7 @@
         @Override
         public int getVictim(){
             if(this.loadedPages == this.assignedPages)
-                return pvmm.getVictim(memoryAccesses,this.loadedPages);
+                return pvmm.getVictim(memoryAccesses,this.pt.getValidList());
             else
                 return -1;
         }

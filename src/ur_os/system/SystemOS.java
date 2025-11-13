@@ -65,8 +65,8 @@ public class SystemOS implements Runnable{
         //initSimulationQueueSimpler();
         
         // Use of VM Simulation: 
-        initVMSim();
-
+        //initVMSim();
+        stableVMSim();
 
         showProcesses();
         this.simType = simType;
@@ -123,6 +123,36 @@ public class SystemOS implements Runnable{
         processes.add(p);
     }
 
+    public void stableVMSim(){
+        processes.clear();
+        clock = 0;
+        Process p;
+        Instruction temp;
+
+        final int P0_ADDR = 100;
+        final int P1_ADDR = 200;
+        final int P2_ADDR = 300;
+        final int P3_ADDR = 400;
+
+        p = new Process(1, 0);
+        p.setSize(512); // 8 pages long process size
+
+
+        //Load three pages
+        p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P0_ADDR, (byte) 4));
+        p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P1_ADDR, (byte) 4));
+        p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P2_ADDR, (byte) 4));
+    
+        p.addCPUInstructions(5); 
+        
+        // Load another page -> should make another page fault
+        p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P3_ADDR, (byte) 4));
+        temp = new IOInstruction(5); //Wait 5 cycles
+        p.addInstruction(temp);
+
+        p.addInstruction(new EndInstruction());
+        processes.add(p);
+    }
 
     public void initSimulationQueue(){
         double tp;
