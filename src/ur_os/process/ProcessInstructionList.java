@@ -91,7 +91,7 @@ public class ProcessInstructionList {
             System.out.println("Error in burst addition");
     }
     
-    private ArrayList<Instruction> getList(){
+    public ArrayList<Instruction> getList(){
         return this.instructions;
     }
     

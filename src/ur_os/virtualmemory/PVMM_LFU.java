@@ -20,6 +20,11 @@ public class PVMM_LFU extends ProcessVirtualMemoryManager{
     @Override
     public int getVictim(LinkedList<Integer> memoryAccesses, int loaded) {
         
+        if (memoryAccesses == null || memoryAccesses.isEmpty() || loaded <= 0) {
+            System.out.println(memoryAccesses.toString());
+            return -1;
+        }
+
         HashMap<Integer,Integer> freq = new HashMap<>();
         LinkedList<Integer> recent = new LinkedList<>();
         int size = memoryAccesses.size();

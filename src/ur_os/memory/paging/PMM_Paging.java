@@ -173,15 +173,24 @@ public class PMM_Paging extends ProcessMemoryManager{
         pt.setPageDirty(page, valid);
     }
     
-    
+    public String printVPT(){
+        return vpt.toString();
+    }
     
 
     @Override
     public int getVictim(){
-        if(this.loadedPages == this.assignedPages)
-            return pvmm.getVictim(memoryAccesses,this.loadedPages);
-        else
+
+        System.out.println("In victim: \n" + printVPT());
+        // If loadedPages is >= assignedPages we must select a victim.
+        // Using >= avoids missing a replacement when the counter slipped above.
+        if (this.assignedPages > 0 && this.loadedPages >= this.assignedPages) {
+            // pass the number of frames currently assigned (use assignedPages),
+            // not loadedPages - pvmm expects how many frames to consider.
+            return pvmm.getVictim(memoryAccesses, this.assignedPages);
+        } else {
             return -1;
+        }
     }
     
     

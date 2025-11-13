@@ -35,7 +35,9 @@ public class SMM_Paging extends SystemMemoryManager{
             
             MemoryAddress pa = pmmp.getFrameMemoryAddressFromLogicalMemoryAddress(la);
             
-            
+            //DEBUGGING
+            System.out.println("PAGE TRYING TO LOAD: \n" + pa.getAddress());
+
             //Only valid for Virtual Memory
             if(pa.getAddress() < 0){
                 //There was a page fault, so the page needs to be brought to memory from swap

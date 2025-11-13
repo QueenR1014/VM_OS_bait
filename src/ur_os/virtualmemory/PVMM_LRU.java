@@ -18,12 +18,14 @@ public class PVMM_LRU extends ProcessVirtualMemoryManager{
     
     @Override
     public int getVictim(LinkedList<Integer> memoryAccesses, int loaded) {
-        
+        if (memoryAccesses == null || memoryAccesses.isEmpty() || loaded <= 0) return -1;
         //ToDo
         LinkedList<Integer> recent = new LinkedList<>();
         int size  = memoryAccesses.size() -1 ;
 
 
+        //DEBUGGING
+        System.out.println("LRU: memoryAccesses=" + memoryAccesses + " loaded=" + loaded);
         while(size >= 0 && recent.size() < loaded){
 
             int access = memoryAccesses.get(size);

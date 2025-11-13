@@ -86,7 +86,7 @@ public class Process implements Comparable{
         System.out.println("=== Process Created ===");
         System.out.println("PID: " + pid + " (created at time " + time_init + ")");
         System.out.println("Instruction list:");
-        pil.getInstructionList().forEach(System.out::println);
+        pil.getList().forEach(System.out::println);
         System.out.println("========================\n");
     }
     
