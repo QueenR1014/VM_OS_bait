@@ -11,6 +11,7 @@ import ur_os.memory.Memory;
 import ur_os.memory.MemoryManagerType;
 import ur_os.process.Process;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 import ur_os.memory.MemoryInstruction;
 import ur_os.memory.MemoryOperationType;
@@ -127,28 +128,25 @@ public class SystemOS implements Runnable{
         processes.clear();
         clock = 0;
         Process p;
-        Instruction temp;
 
-        final int P0_ADDR = 100;
-        final int P1_ADDR = 200;
-        final int P2_ADDR = 300;
-        final int P3_ADDR = 400;
 
+        // 10 memory instructions        
         p = new Process(1, 0);
         p.setSize(512); // 8 pages long process size
+        
+        p.addCPUInstructions(5);
+        //Load ten pages
+        
+        int init_ADD = 100;
+        for(int i = 0; i < 10; i++){
+            int temp_ADD = init_ADD * i;
 
-        p.addCPUInstructions(1);
-        //Load three pages
-        p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P0_ADDR, (byte) 4));
-        p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P1_ADDR, (byte) 4));
-        p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P2_ADDR, (byte) 4));
+            p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, temp_ADD, (byte) 4));
+        }
+        
     
         p.addCPUInstructions(5); 
         
-        // Load another page -> should make another page fault
-        p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, P3_ADDR, (byte) 4));
-        temp = new IOInstruction(5); //Wait 5 cycles
-        p.addInstruction(temp);
 
         p.addInstruction(new EndInstruction());
         processes.add(p);
