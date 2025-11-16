@@ -5,7 +5,7 @@
 package ur_os.virtualmemory;
 
 import java.util.LinkedList;
-
+import java.util.ArrayList;
 /**
  *
  * @author user
@@ -17,7 +17,7 @@ public class PVMM_LRU extends ProcessVirtualMemoryManager{
     }
     
     @Override
-    public int getVictim(LinkedList<Integer> memoryAccesses, int loaded) {
+    public int getVictim(LinkedList<Integer> memoryAccesses, ArrayList<Integer> validList) {
         if (memoryAccesses == null || memoryAccesses.isEmpty() || loaded <= 0) return -1;
         //ToDo
         LinkedList<Integer> recent = new LinkedList<>();

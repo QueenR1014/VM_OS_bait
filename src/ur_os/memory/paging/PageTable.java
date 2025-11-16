@@ -117,6 +117,18 @@ public class PageTable {
             System.out.println("Error - Including erroneous page number");
         }
     }
+    
+    public ArrayList<Integer> getValidList(){
+        ArrayList<Integer> validPages= new ArrayList();
+        int i=0;
+        for(PageTableEntry p: pageTable){
+            if(p.isValid()){
+                validPages.add(i);
+            }
+            i++;
+        }
+        return validPages;
+    }
 
     public int getSize() {
         return size;

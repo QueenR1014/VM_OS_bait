@@ -4,6 +4,7 @@
  */
 package ur_os.virtualmemory;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -14,7 +15,7 @@ public abstract class ProcessVirtualMemoryManager {
     
     ProcessVirtualMemoryManagerType type;
     
-    public abstract int getVictim(LinkedList<Integer> memoryAccesses, int loaded);
+    public abstract int getVictim(LinkedList<Integer> memoryAccesses, ArrayList<Integer> validList);
     
     
     
