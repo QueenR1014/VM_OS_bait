@@ -16,6 +16,7 @@ import java.util.Random;
 import ur_os.memory.MemoryInstruction;
 import ur_os.memory.MemoryOperationType;
 import ur_os.memory.freememorymagament.FreeMemorySlotManager;
+import ur_os.memory.paging.PMM_Paging;
 import ur_os.process.EndInstruction;
 import ur_os.process.IOInstruction;
 import ur_os.process.Instruction;
@@ -132,8 +133,7 @@ public class SystemOS implements Runnable{
 
         // 10 memory instructions        
         p = new Process(1, 0);
-        p.setSize(512); // 8 pages long process size
-        
+        p.setSize(15*64); 
         p.addCPUInstructions(5);
         //Load ten pages
         
@@ -410,7 +410,10 @@ public class SystemOS implements Runnable{
             for (Process p : ps) {
                 os.create_process(p);
                 System.out.println("Process Created: "+p.getPid()+"\n"+p);
-                
+                PMM_Paging pmmp = (PMM_Paging) p.getPMM();
+                System.out.println("PROCESS PAGE TABLE:");
+                pmmp.getPT().toString(); // if you implement this
+
                 showFreeMemory();
             } //If the scheduler is preemtive, this action will trigger the extraction from the CPU, is any process is there.
             

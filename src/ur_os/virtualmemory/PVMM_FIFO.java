@@ -28,7 +28,7 @@ public class PVMM_FIFO extends ProcessVirtualMemoryManager{
             size--;
         }
         
-        return pages.getLast();
+        return pages.getLast()`;
     }
     
 }

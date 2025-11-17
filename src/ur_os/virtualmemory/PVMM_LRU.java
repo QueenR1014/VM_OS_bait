@@ -18,36 +18,21 @@ public class PVMM_LRU extends ProcessVirtualMemoryManager{
     
     @Override
     public int getVictim(LinkedList<Integer> memoryAccesses, ArrayList<Integer> validList) {
-        if (memoryAccesses == null || memoryAccesses.isEmpty() || loaded <= 0) return -1;
-        //ToDo
-        LinkedList<Integer> recent = new LinkedList<>();
-        int size  = memoryAccesses.size() -1 ;
+        if (memoryAccesses == null || memoryAccesses.isEmpty() || validList.size() <= 0) return -1;
+        
+        int victim = validList.getLast(); //default to last page
+        int vIndex = Integer.MAX_VALUE;
 
-
-        //DEBUGGING
-        System.out.println("LRU: memoryAccesses=" + memoryAccesses + " loaded=" + loaded);
-        while(size >= 0 && recent.size() < loaded){
-
-            int access = memoryAccesses.get(size);
-
-            if(!recent.contains(access)){
-                //add to recent accesses if not in list
-                recent.addFirst(access);
-
-            }else{
-                //move to front if accessed again
-                int indx = recent.indexOf(access);
-                recent.remove(indx);
-                recent.addFirst(access);
+        for(int page:validList){
+            int i = memoryAccesses.lastIndexOf(page); //Get last appeareance of page in memory accesses
+            if(vIndex > i){
+                vIndex = i; //replace index if its further away in the past
+                victim = page;
             }
 
-            size--;
         }
-        
-        int victim = recent.getLast();
-        System.out.println("Selected victim: " + victim);
-        //return the least recently used page
         return victim;
+
     }
     
 }
