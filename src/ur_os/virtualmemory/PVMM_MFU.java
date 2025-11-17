@@ -4,6 +4,7 @@
  */
 package ur_os.virtualmemory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -18,31 +19,27 @@ public class PVMM_MFU extends ProcessVirtualMemoryManager{
     }
     
     @Override
-    public int getVictim(LinkedList<Integer> memoryAccesses, int loaded) {
+    public int getVictim(LinkedList<Integer> memoryAccesses, ArrayList<Integer> validList){
         
-        HashMap<Integer,Integer> freq = new HashMap<>();
-        LinkedList<Integer> recent = new LinkedList<>();
-        int size = memoryAccesses.size();
+        if (memoryAccesses == null || memoryAccesses.isEmpty() || validList.size() <= 0) {
+            System.out.println(memoryAccesses.toString());
+            return -1;
+        }
 
+        System.out.println("FAULTING ACCESSES: " + memoryAccesses.toString());
+        HashMap<Integer,Integer> freq = new HashMap<>();
 
         //Create Frequency Map
-        for(int i = size -1; i >= 0 ; i--){
-            int page = memoryAccesses.get(i); 
+        for(int page : memoryAccesses){
             freq.put(page, freq.getOrDefault(page, 0) + 1);//add frecuencies
-            
-            // recently loaded pages (most recent first)
-            if(recent.size() < loaded && !recent.contains(page)){
-                recent.add(page);
-            }
         }
          
 
         // Victim Selection
         int victim = -1;
         int max = Integer.MIN_VALUE;
-        for(int i = 0; i < loaded; i++){
-            int page = recent.get(i);
-            int pageFreq = freq.get(page);
+        for(int page: validList){
+            int pageFreq = freq.getOrDefault(page,0);
             if(pageFreq > max){
                 victim = page;
                 max = pageFreq;
@@ -52,5 +49,6 @@ public class PVMM_MFU extends ProcessVirtualMemoryManager{
 
         return victim;
     }
+    
     
 }

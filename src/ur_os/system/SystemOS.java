@@ -10,6 +10,8 @@ import ur_os.memory.contiguous.SMM_Contiguous;
 import ur_os.memory.Memory;
 import ur_os.memory.MemoryManagerType;
 import ur_os.process.Process;
+
+import java.lang.foreign.AddressLayout;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -68,7 +70,8 @@ public class SystemOS implements Runnable{
         
         // Use of VM Simulation: 
         //initVMSim();
-        stableVMSim();
+        //stableVMSim();
+        experimentalVM();
 
         showProcesses();
         this.simType = simType;
@@ -152,6 +155,45 @@ public class SystemOS implements Runnable{
         processes.add(p);
     }
 
+    public void experimentalVM(){
+        processes.clear();
+        clock = 0;
+        Process p;
+
+        //Page addresses
+        ArrayList<Integer> addresses = new ArrayList<>();
+        for(int i = 0;i<6;i++){
+            addresses.add(100 * i);
+        }
+        
+        //Memory Acessess
+        ArrayList<Integer> accesses = new ArrayList<>();
+        accesses.add(0);
+        accesses.add(1);
+        accesses.add(3);
+        accesses.add(2);
+        accesses.add(0);
+        accesses.add(0);
+        accesses.add(4);
+        accesses.add(5);
+        accesses.add(1);
+        accesses.add(0);
+        accesses.add(4);
+
+        p = new Process(1, 0);
+        p.setSize(15*64); 
+        p.addCPUInstructions(5);
+
+        //Add Memory Instructions to cpu
+        for(int access:accesses){
+            p.addInstruction(new MemoryInstruction(MemoryOperationType.LOAD, addresses.get(access), (byte) 4));
+        }
+
+        p.addCPUInstructions(5); 
+        p.addInstruction(new EndInstruction());
+        processes.add(p);
+    }
+    
     public void initSimulationQueue(){
         double tp;
         Process p;
@@ -413,7 +455,7 @@ public class SystemOS implements Runnable{
                 PMM_Paging pmmp = (PMM_Paging) p.getPMM();
                 System.out.println("PROCESS PAGE TABLE:");
                 pmmp.getPT().toString(); // if you implement this
-
+                
                 showFreeMemory();
             } //If the scheduler is preemtive, this action will trigger the extraction from the CPU, is any process is there.
             
@@ -453,6 +495,12 @@ public class SystemOS implements Runnable{
         System.out.println("******SIMULATION FINISHES******");
         //os.showProcesses();
         
+        //DEBUGGING PAGE FAULT PRINTING
+        for (Process p : processes) {
+            PMM_Paging pmmp = (PMM_Paging) p.getPMM();
+            System.out.println("Process " + p.getPid() + " page faults: " + pmmp.getPageFaultCount());
+        }
+
         System.out.println("******Process Execution******");
         for (Integer num : execution) {
             System.out.print(num+" ");
