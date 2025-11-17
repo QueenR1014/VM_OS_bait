@@ -163,6 +163,15 @@ public class OS {
             break;
 
             case MEMORY_DONE: //It is assumed that the process in Memory is done and it has been removed from the queue
+                 System.out.println("\n=== MEMORY BURST FINISHED FOR PROCESS " + p.getPid() + " ===");
+    
+                // 🔍 Print page tables here
+                pmm = p.getPMM();
+                if (pmm instanceof PMM_Paging) {
+                    PMM_Paging pmmp = (PMM_Paging)pmm;
+                    System.out.println(pmmp.getPT().toString());  // <-- You must implement this method
+                    System.out.println("--------------------------------------------\n");
+                }
                 rq.addProcess(p);
             break;
             
