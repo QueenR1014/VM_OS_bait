@@ -10,25 +10,17 @@ import java.util.LinkedList;
  *
  * @author user
  */
-public class PVMM_FIFO extends ProcessVirtualMemoryManager{
+public class PVMM_FIFO extends ProcessVirtualMemoryManager {
 
-    public PVMM_FIFO(){
+    public PVMM_FIFO() {
         type = ProcessVirtualMemoryManagerType.FIFO;
     }
-    
+
     @Override
-    public int getVictim(LinkedList<Integer> memoryAccesses, int loaded) {
-        LinkedList<Integer> pages = new LinkedList();
-        int size = memoryAccesses.size()-1;
-        
-        while(size >= 0 && pages.size()<loaded){
-            if(!pages.contains(memoryAccesses.get(size))){
-                pages.add(memoryAccesses.get(size));
-            }
-            size--;
+    public int getVictim(LinkedList<Integer> memoryAccesses, ArrayList<Integer> validList) {
+        if (validList == null || validList.isEmpty()) {
+            throw new IllegalStateException("No pages loaded.");
         }
-        
-        return pages.getLast()`;
+        return validList.get(0);
     }
-    
 }
